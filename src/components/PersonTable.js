@@ -15,38 +15,37 @@ function PersonTable() {
       }
     };
 
-    fetchData(); // Call fetchData function
-  }, []); // Empty dependency array to run effect only once on mount
+    fetchData();
+  }, []);
 
-  // Render table with data
   return (
-    <div>
-      <h2>Liste des personnes</h2>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      
       {data ? (
-        <table>
-          <thead>
+        <table className="min-w-full bg-white shadow-md rounded my-4 overflow-hidden mx-auto"> {/* Added mx-auto class */}
+          <thead className="bg-gray-800 text-white">
             <tr>
-              <th>Nom</th>
-              <th>Prénom</th>
-              <th>Email</th>
-              <th>Date de naissance</th>
-              <th>Sexe</th>
+              <th className="py-2 px-4">Nom</th>
+              <th className="py-2 px-4">Prénom</th>
+              <th className="py-2 px-4">Email</th>
+              <th className="py-2 px-4">Date de naissance</th>
+              <th className="py-2 px-4">Sexe</th>
             </tr>
           </thead>
           <tbody>
             {data.map((person) => (
-              <tr key={person.id}>
-                <td>{person.nom}</td>
-                <td>{person.prénom}</td>
-                <td>{person.email}</td>
-                <td>{person.date_de_naissance}</td>
-                <td>{person.sexe}</td>
+              <tr key={person.id} className="border-b border-gray-200">
+                <td className="py-2 px-4">{person.nom}</td>
+                <td className="py-2 px-4">{person.prénom}</td>
+                <td className="py-2 px-4">{person.email}</td>
+                <td className="py-2 px-4">{person.date_de_naissance}</td>
+                <td className="py-2 px-4">{person.sexe}</td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        <p>No data available</p>
+        <p className="text-center text-gray-500">No data available</p>
       )}
     </div>
   );
