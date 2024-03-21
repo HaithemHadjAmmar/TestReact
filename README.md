@@ -18,7 +18,7 @@ This project is a simple web application for managing people's information. It a
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/HaithemhadjAmmar/TestReact.git`
+1. Clone the repository: `git clone https://github.com/HaithemHadjAmmar/TestReact.git`
 2. Navigate to the project directory: `TestReact`
 3. Install dependencies: `npm install`
 
