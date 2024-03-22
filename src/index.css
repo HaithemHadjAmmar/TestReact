@@ -106,10 +106,20 @@
   text-align: center; /* Equivalent to text-center in Tailwind */
 }
 
-h1{
+h1 {
   text-align: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-weight: 800;
   font-size: 1.5rem;
+}
+
+/* Add red border for error messages */
+.border-red-500 {
+  border-color: #e53e3e; /* Equivalent to border-red-500 in Tailwind */
+}
+
+/* Make error text red */
+.text-error {
+  color: #e53e3e; /* Red color for error text */
 }
