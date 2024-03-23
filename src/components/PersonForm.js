@@ -19,6 +19,7 @@ const PersonForm = () => {
     date_de_naissance: false,
     sexe: false,
     email: false,
+    emailExist: false,
     password: false
   });
 
@@ -30,7 +31,7 @@ const PersonForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Check for form errors
     const errors = {};
     let hasErrors = false;
@@ -44,9 +45,8 @@ const PersonForm = () => {
       setFormErrors(errors);
       return; // Stop form submission
     }
-
+  
     try {
-      // Send form data to backend API
       const response = await axios.post('http://localhost:8000/api/users', formData);
       // Dispatch action to add person to Redux store
       dispatch(addPerson(response.data));
@@ -59,14 +59,25 @@ const PersonForm = () => {
         email: '',
         password: ''
       });
-
+  
       // Refresh the page to get the updated data
       window.location.reload();
     } catch (error) {
-      console.error('Error submitting form:', error);
-      // Handle error (e.g., show error message to user)
+      if (error.response && error.response.status === 422 && error.response.data.errors && error.response.data.errors.email) {
+        const errorMessages = error.response.data.errors.email;
+        if (Array.isArray(errorMessages) && errorMessages.length > 0 && errorMessages[0].includes('already been taken')) {
+          setFormErrors({ ...formErrors, emailExist: true });
+        } else {
+          setFormErrors({ ...formErrors, email: true });
+        }
+        console.error('Error submitting form:', error);
+        console.error('Validation errors:', error.response.data.errors);
+      } else {
+        console.error('Error submitting form:', error);
+        // Handle other errors (e.g., show error message to user)
+      }
     }
-  };
+  };    
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
@@ -83,8 +94,16 @@ const PersonForm = () => {
         <option value="autre">Autre</option>
       </select>
       {formErrors.sexe && <p className="text-red-500" style={{color: 'red'}}>Veuillez sélectionner le sexe.</p>}
-      <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className={`mb-4 p-2 rounded-md block w-full ${formErrors.email && 'border-red-500'}`} />
-      {formErrors.email && <p className="text-red-500" style={{color: 'red'}}>Veuillez saisir une adresse email valide.</p>}
+      <input 
+  type="email" 
+  name="email" 
+  value={formData.email} 
+  onChange={handleChange} 
+  placeholder="Email" 
+  className={`mb-4 p-2 rounded-md block w-full ${formErrors.email && 'border-red-500'}`} 
+/>
+{formErrors.email && <p className="text-red-500" style={{color: 'red'}}>Veuillez saisir une adresse email valide.</p>}
+{formErrors.emailExist && <p className="text-red-500" style={{color: 'red'}}>L'adresse email fournie existe déjà.</p>}
       <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Mot de passe" className={`mb-4 p-2 rounded-md block w-full ${formErrors.password && 'border-red-500'}`} />
       {formErrors.password && <p className="text-red-500" style={{color: 'red'}}>Le mot de passe doit contenir au moins 6 caractères.</p>}
       <button type="submit" className="bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Ajouter</button>
